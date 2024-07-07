@@ -21,7 +21,7 @@ ToDoList is a Flutter-based task management application that allows users to cre
 ### Clone the Repository
 
 git clone https://github.com/yourusername/todolist.git
-cd todolist 
+
 
 ### Install dependencies
 flutter pub get
