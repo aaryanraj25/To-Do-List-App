@@ -15,7 +15,7 @@ class TaskRepository {
     String path = join(await getDatabasesPath(), 'task_database.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, // Increment version number
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE tasks(
@@ -24,9 +24,17 @@ class TaskRepository {
             description TEXT,
             priority INTEGER,
             dueDate TEXT,
+            reminderDateTime TEXT,
             isCompleted INTEGER
           )
         ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('''
+            ALTER TABLE tasks ADD COLUMN reminderDateTime TEXT
+          ''');
+        }
       },
     );
   }

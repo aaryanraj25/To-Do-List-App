@@ -4,6 +4,8 @@ import 'package:todolist/views/task_screen_list.dart';
 import 'controllers/task_controller.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Get.put(TaskController()); // Initialize the controller here
   runApp(MyApp());
 }
 
@@ -13,13 +15,10 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'ToDoList App',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: TaskListScreen(),
-      initialBinding: BindingsBuilder(() {
-        Get.put(TaskController());
-      }),
     );
   }
 }

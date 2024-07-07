@@ -19,7 +19,11 @@ class PriorityDropdown extends StatelessWidget {
         DropdownMenuItem(value: 2, child: Text('Medium')),
         DropdownMenuItem(value: 3, child: Text('High')),
       ],
-      onChanged: onChanged,
+      onChanged: (value) {
+        if (value != null) {
+          onChanged(value);
+        }
+      },
     );
   }
 }

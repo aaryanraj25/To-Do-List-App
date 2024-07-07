@@ -26,6 +26,13 @@ class TaskSortingOptions extends StatelessWidget {
               Get.back();
             },
           ),
+          ListTile(
+            title: Text('Sort by Creation Date'),
+            onTap: () {
+              taskController.sortByCreationDate();
+              Get.back();
+            },
+          ),
         ],
       ),
     );

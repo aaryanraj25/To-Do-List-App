@@ -4,6 +4,7 @@ class Task {
   String description;
   int priority; // 1: Low, 2: Medium, 3: High
   DateTime dueDate;
+  DateTime? reminderDateTime;
   bool isCompleted;
 
   Task({
@@ -12,6 +13,7 @@ class Task {
     required this.description,
     required this.priority,
     required this.dueDate,
+    this.reminderDateTime,
     this.isCompleted = false,
   });
 
@@ -23,6 +25,7 @@ class Task {
       'description': description,
       'priority': priority,
       'dueDate': dueDate.toIso8601String(),
+      'reminderDateTime': reminderDateTime?.toIso8601String(),
       'isCompleted': isCompleted ? 1 : 0,
     };
   }
@@ -35,6 +38,7 @@ class Task {
       description: map['description'],
       priority: map['priority'],
       dueDate: DateTime.parse(map['dueDate']),
+      reminderDateTime: map['reminderDateTime'] != null ? DateTime.parse(map['reminderDateTime']) : null,
       isCompleted: map['isCompleted'] == 1,
     );
   }

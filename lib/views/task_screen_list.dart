@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todolist/views/widgets/task_sorting_options.dart';
 import '../controllers/task_controller.dart';
 import 'widgets/task_item.dart';
 import 'task_detail_screen.dart';
+import 'task_search_screen.dart';
+import 'widgets/task_sorting_options.dart';
 
 class TaskListScreen extends StatelessWidget {
-  final TaskController taskController = Get.find<TaskController>();
-
   @override
   Widget build(BuildContext context) {
+    final TaskController taskController = Get.find<TaskController>();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('ToDoList'),
+        title: Text('To Do List'),
         actions: [
           IconButton(
             icon: Icon(Icons.search),
@@ -33,7 +34,7 @@ class TaskListScreen extends StatelessWidget {
           itemCount: taskController.tasks.length,
           itemBuilder: (context, index) {
             final task = taskController.tasks[index];
-            return TaskItem(task: task);
+            return TaskItem(task: task, index: index);
           },
         );
       }),

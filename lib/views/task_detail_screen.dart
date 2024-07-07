@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todolist/models/task_model.dart';
-import '../controllers/task_controller.dart';
+import 'package:todolist/controllers/task_controller.dart';
 import 'widgets/task_form.dart';
 
 class TaskDetailScreen extends StatelessWidget {

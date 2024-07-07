@@ -1,16 +1,19 @@
 import 'package:get/get.dart';
 import 'package:todolist/models/task_model.dart';
 import 'package:todolist/repositories/task_repo.dart';
+import '../services/notification_service.dart';
 
 class TaskController extends GetxController {
   var tasks = <Task>[].obs;
   var searchResults = <Task>[].obs;
   final TaskRepository _taskRepository = TaskRepository();
+  final NotificationService _notificationService = NotificationService();
 
   @override
   void onInit() {
     super.onInit();
     fetchTasks();
+    _notificationService.init();
   }
 
   void fetchTasks() async {
@@ -19,17 +22,24 @@ class TaskController extends GetxController {
 
   void addTask(Task task) async {
     await _taskRepository.addTask(task);
+    if (task.reminderDateTime != null) {
+      _notificationService.scheduleNotification(task.id, task.title, task.description, task.reminderDateTime!);
+    }
     fetchTasks();
   }
 
   void updateTask(int index, Task task) async {
     await _taskRepository.updateTask(task);
+    if (task.reminderDateTime != null) {
+      _notificationService.scheduleNotification(task.id, task.title, task.description, task.reminderDateTime!);
+    }
     fetchTasks();
   }
 
   void deleteTask(int index) async {
     await _taskRepository.deleteTask(tasks[index].id);
-    fetchTasks();
+    _notificationService.cancelNotification(tasks[index].id);
+    tasks.removeAt(index);
   }
 
   void toggleTaskCompletion(Task task) async {
@@ -46,7 +56,20 @@ class TaskController extends GetxController {
     tasks.sort((a, b) => a.dueDate.compareTo(b.dueDate));
   }
 
+  void sortByCreationDate() {
+    tasks.sort((a, b) => a.id.compareTo(b.id));
+  }
+
   void searchTasks(String query) {
-    searchResults.value = tasks.where((task) => task.title.contains(query)).toList();
+    if (query.isEmpty) {
+      searchResults.value = tasks;
+    } else {
+      searchResults.value = tasks.where((task) {
+        return task.title.toLowerCase().contains(query.toLowerCase()) ||
+               task.description.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    }
   }
 }
+
+

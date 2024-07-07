@@ -19,6 +19,7 @@ class _TaskFormState extends State<TaskForm> {
   late String _description;
   late int _priority;
   late DateTime _dueDate;
+  DateTime? _reminderDateTime;
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _TaskFormState extends State<TaskForm> {
     _description = widget.task?.description ?? '';
     _priority = widget.task?.priority ?? 1;
     _dueDate = widget.task?.dueDate ?? DateTime.now();
+    _reminderDateTime = widget.task?.reminderDateTime;
   }
 
   @override
@@ -77,6 +79,14 @@ class _TaskFormState extends State<TaskForm> {
               trailing: Icon(Icons.calendar_today),
               onTap: _pickDueDate,
             ),
+            ListTile(
+              title: Text('Reminder'),
+              subtitle: _reminderDateTime != null
+                  ? Text(DateFormat.yMd().add_jm().format(_reminderDateTime!))
+                  : Text('No reminder set'),
+              trailing: Icon(Icons.alarm),
+              onTap: _pickReminderDateTime,
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveForm,
@@ -102,6 +112,26 @@ class _TaskFormState extends State<TaskForm> {
     }
   }
 
+  void _pickReminderDateTime() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _reminderDateTime ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
+    if (pickedDate != null) {
+      TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(_reminderDateTime ?? DateTime.now()),
+      );
+      if (pickedTime != null) {
+        setState(() {
+          _reminderDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
+        });
+      }
+    }
+  }
+
   void _saveForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -111,6 +141,7 @@ class _TaskFormState extends State<TaskForm> {
         description: _description,
         priority: _priority,
         dueDate: _dueDate,
+        reminderDateTime: _reminderDateTime,
         isCompleted: widget.task?.isCompleted ?? false,
       );
       widget.onSave(newTask);
