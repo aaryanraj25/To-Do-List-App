@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todolist/views/task_screen_list.dart';
+import 'package:todolist/splash_screen.dart';
 import 'controllers/task_controller.dart';
+import 'package:todolist/services/notification_service.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Get.put(TaskController()); // Initialize the controller here
+  await NotificationService().init(); // Initialize the notification service
+  Get.put(TaskController());
   runApp(MyApp());
 }
 
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: TaskListScreen(),
+      home: SplashScreen(),
     );
   }
 }

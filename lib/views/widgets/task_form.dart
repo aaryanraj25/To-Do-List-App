@@ -33,66 +33,125 @@ class _TaskFormState extends State<TaskForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextFormField(
-              initialValue: _title,
-              decoration: InputDecoration(labelText: 'Title'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a title';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _title = value!;
-              },
-            ),
-            TextFormField(
-              initialValue: _description,
-              decoration: InputDecoration(labelText: 'Description'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a description';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _description = value!;
-              },
-            ),
-            PriorityDropdown(
-              initialPriority: _priority,
-              onChanged: (value) {
-                setState(() {
-                  _priority = value;
-                });
-              },
-            ),
-            ListTile(
-              title: Text('Due Date'),
-              subtitle: Text(DateFormat.yMd().format(_dueDate)),
-              trailing: Icon(Icons.calendar_today),
-              onTap: _pickDueDate,
-            ),
-            ListTile(
-              title: Text('Reminder'),
-              subtitle: _reminderDateTime != null
-                  ? Text(DateFormat.yMd().add_jm().format(_reminderDateTime!))
-                  : Text('No reminder set'),
-              trailing: Icon(Icons.alarm),
-              onTap: _pickReminderDateTime,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveForm,
-              child: Text('Save'),
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Add Task',
+          style: TextStyle(
+            color: Color(0xFF13002E),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconTheme: IconThemeData(color: Color(0xFF13002E)),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                initialValue: _title,
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  labelStyle: TextStyle(color: Color(0xFF13002E)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF13002E)),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF13002E)),
+                  ),
+                ),
+                cursorColor: Color(0xFF13002E),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a title';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _title = value!;
+                },
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                initialValue: _description,
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  labelStyle: TextStyle(color: Color(0xFF13002E)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF13002E)),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF13002E)),
+                  ),
+                ),
+                cursorColor: Color(0xFF13002E),
+                maxLines: 4,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _description = value!;
+                },
+              ),
+              SizedBox(height: 16),
+              PriorityDropdown(
+                initialPriority: _priority,
+                onChanged: (value) {
+                  setState(() {
+                    _priority = value;
+                  });
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Due Date',
+                  style: TextStyle(color: Color(0xFF13002E)),
+                ),
+                subtitle: Text(
+                  DateFormat.yMd().format(_dueDate),
+                  style: TextStyle(color: Color(0xFF13002E)),
+                ),
+                trailing: Icon(Icons.calendar_today, color: Colors.yellow),
+                onTap: _pickDueDate,
+              ),
+              ListTile(
+                title: Text(
+                  'Reminder',
+                  style: TextStyle(color: Color(0xFF13002E)),
+                ),
+                subtitle: _reminderDateTime != null
+                    ? Text(
+                        DateFormat.yMd().add_jm().format(_reminderDateTime!),
+                        style: TextStyle(color: Color(0xFF13002E)),
+                      )
+                    : Text('No reminder set', style: TextStyle(color: Color(0xFF13002E))),
+                trailing: Icon(Icons.alarm, color: Colors.yellow),
+                onTap: _pickReminderDateTime,
+              ),
+              SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF13002E),
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  ),
+                  onPressed: _saveForm,
+                  child: Text(
+                    'Save',
+                    style: TextStyle(color: Colors.yellow),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -126,7 +185,13 @@ class _TaskFormState extends State<TaskForm> {
       );
       if (pickedTime != null) {
         setState(() {
-          _reminderDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
+          _reminderDateTime = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
         });
       }
     }

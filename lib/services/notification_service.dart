@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -18,7 +19,11 @@ class NotificationService {
       android: initializationSettingsAndroid,
     );
 
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+    );
+
+    tz.initializeTimeZones();
   }
 
   Future<void> scheduleNotification(int id, String title, String body, DateTime scheduledTime) async {
@@ -31,6 +36,7 @@ class NotificationService {
         android: AndroidNotificationDetails(
           'your channel id',
           'your channel name',
+
         ),
       ),
       androidAllowWhileIdle: true,
