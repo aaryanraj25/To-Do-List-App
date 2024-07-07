@@ -6,6 +6,7 @@ class Task {
   DateTime dueDate;
   DateTime? reminderDateTime;
   bool isCompleted;
+  bool reminderSent; 
 
   Task({
     required this.id,
@@ -15,6 +16,7 @@ class Task {
     required this.dueDate,
     this.reminderDateTime,
     this.isCompleted = false,
+    this.reminderSent = false,
   });
 
   // Method to convert Task to a Map for database storage
@@ -42,4 +44,9 @@ class Task {
       isCompleted: map['isCompleted'] == 1,
     );
   }
+
+  void setReminderSent(bool value) {
+    reminderSent = value;
+  }
 }
+

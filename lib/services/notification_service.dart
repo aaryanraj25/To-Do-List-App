@@ -1,86 +1,71 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class NotificationService {
-  static final NotificationService _instance = NotificationService._internal();
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
-  factory NotificationService() {
-    return _instance;
+  Future<void> initNotification() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings(
+            requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: true,
+            onDidReceiveLocalNotification:
+                (int id, String? title, String? body, String? payload) async {});
+
+    final InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    await notificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse notificationResponse) async {});
+
+    await _createNotificationChannel();
   }
 
-  NotificationService._internal();
-
-  Future<void> init() async {
-    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
+  Future<void> _createNotificationChannel() async {
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'channelId', // id
+      'channelName', // name
+      description: 'This channel is used for important notifications.', // description
+      importance: Importance.max,
     );
 
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-    );
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
 
-    tz.initializeTimeZones();
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
 
-    // Check and request the SCHEDULE_EXACT_ALARM permission on Android 13+
-    if (await _needsExactAlarmPermission()) {
-      await _requestExactAlarmPermission();
+  Future<void> requestNotificationPermission() async {
+    PermissionStatus status = await Permission.notification.request();
+    if (status.isGranted) {
+      print("Notification permission granted.");
+    } else {
+      print("Notification permission denied.");
     }
   }
 
-  Future<void> scheduleNotification(int id, String title, String body, DateTime scheduledTime) async {
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledTime, tz.local),
-      const NotificationDetails(
+  NotificationDetails notificationDetails() {
+    return const NotificationDetails(
         android: AndroidNotificationDetails(
-          'your channel id',
-          'your channel name',
-          channelDescription: 'your channel description',
-          importance: Importance.high,
-          priority: Priority.high,
-          playSound: true,
+          'channelId', 
+          'channelName',
+          channelDescription: 'This channel is used for important notifications.',
+          importance: Importance.max,
         ),
-      ),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
+        iOS: DarwinNotificationDetails());
   }
 
-  Future<void> cancelNotification(int id) async {
-    await flutterLocalNotificationsPlugin.cancel(id);
-  }
-
-  Future<bool> _needsExactAlarmPermission() async {
-    final bool isAndroid13OrHigher = await _isAndroid13OrHigher();
-    if (!isAndroid13OrHigher) {
-      return false;
-    }
-    final result = await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!
-        .areNotificationsEnabled();
-    return result == false; // Explicitly handle the null case
-  }
-
-  Future<void> _requestExactAlarmPermission() async {
-    try {
-      await MethodChannel('dexterous.com/flutter/local_notifications')
-          .invokeMethod('requestExactAlarmPermission');
-    } on PlatformException catch (e) {
-      print("Failed to request exact alarm permission: ${e.message}");
-    }
-  }
-
-  Future<bool> _isAndroid13OrHigher() async {
-    final version = await MethodChannel('dexterous.com/flutter/local_notifications')
-        .invokeMethod<int>('getPlatformVersion');
-    return version != null && version >= 33;
+  Future<void> showNotification(
+      {int id = 0, String? title, String? body, String? payLoad}) async {
+    return notificationsPlugin.show(
+        id, title, body, notificationDetails());
   }
 }

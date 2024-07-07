@@ -9,10 +9,12 @@ import 'task_info_screen.dart'; // Import the info screen
 import 'widgets/task_sorting_options.dart';
 import 'package:todolist/models/task_model.dart';
 
+
 class TaskListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TaskController taskController = Get.find<TaskController>();
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -28,6 +30,7 @@ class TaskListScreen extends StatelessWidget {
             ),
           ],
         ),
+        
         actions: [
           IconButton(
             icon: Icon(Icons.search),
@@ -89,6 +92,7 @@ class TaskListScreen extends StatelessWidget {
               ],
             ),
           ),
+          
           Expanded(
             child: Obx(() {
               final tasksByDate = taskController.tasks
