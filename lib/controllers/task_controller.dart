@@ -16,6 +16,10 @@ class TaskController extends GetxController {
     _notificationService.init();
   }
 
+  int generateTaskId() {
+    return DateTime.now().millisecondsSinceEpoch.remainder(1 << 31);
+  }
+
   void fetchTasks() async {
     tasks.value = await _taskRepository.getTasks();
   }
@@ -70,6 +74,8 @@ class TaskController extends GetxController {
       }).toList();
     }
   }
+
+  void clearSearchResults() {
+    searchResults.clear();
+  }
 }
-
-

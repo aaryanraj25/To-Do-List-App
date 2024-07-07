@@ -33,20 +33,9 @@ class _TaskFormState extends State<TaskForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Add Task',
-          style: TextStyle(
-            color: Color(0xFF13002E),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        iconTheme: IconThemeData(color: Color(0xFF13002E)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
+    return Container(
+      color: Colors.white, // Set the background color to white
+      child: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -57,7 +46,7 @@ class _TaskFormState extends State<TaskForm> {
                 initialValue: _title,
                 decoration: InputDecoration(
                   labelText: 'Title',
-                  labelStyle: TextStyle(color: Color(0xFF13002E)),
+                  labelStyle: TextStyle(color: Color(0xFF13002E), fontWeight: FontWeight.bold),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF13002E)),
                   ),
@@ -81,7 +70,7 @@ class _TaskFormState extends State<TaskForm> {
                 initialValue: _description,
                 decoration: InputDecoration(
                   labelText: 'Description',
-                  labelStyle: TextStyle(color: Color(0xFF13002E)),
+                  labelStyle: TextStyle(color: Color(0xFF13002E), fontWeight: FontWeight.bold),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF13002E)),
                   ),
@@ -90,7 +79,8 @@ class _TaskFormState extends State<TaskForm> {
                   ),
                 ),
                 cursorColor: Color(0xFF13002E),
-                maxLines: 4,
+                keyboardType: TextInputType.multiline,
+                maxLines: null, // Allow unlimited lines
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a description';
@@ -110,22 +100,24 @@ class _TaskFormState extends State<TaskForm> {
                   });
                 },
               ),
+              SizedBox(height: 30),
               ListTile(
                 title: Text(
                   'Due Date',
-                  style: TextStyle(color: Color(0xFF13002E)),
+                  style: TextStyle(color: Color(0xFF13002E), fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
                   DateFormat.yMd().format(_dueDate),
                   style: TextStyle(color: Color(0xFF13002E)),
                 ),
-                trailing: Icon(Icons.calendar_today, color: Colors.yellow),
+                trailing: Icon(Icons.calendar_today, color: Colors.black),
                 onTap: _pickDueDate,
               ),
+              SizedBox(height: 10),
               ListTile(
                 title: Text(
                   'Reminder',
-                  style: TextStyle(color: Color(0xFF13002E)),
+                  style: TextStyle(color: Color(0xFF13002E), fontWeight: FontWeight.bold),
                 ),
                 subtitle: _reminderDateTime != null
                     ? Text(
@@ -133,20 +125,20 @@ class _TaskFormState extends State<TaskForm> {
                         style: TextStyle(color: Color(0xFF13002E)),
                       )
                     : Text('No reminder set', style: TextStyle(color: Color(0xFF13002E))),
-                trailing: Icon(Icons.alarm, color: Colors.yellow),
+                trailing: Icon(Icons.alarm, color: Colors.black),
                 onTap: _pickReminderDateTime,
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 40), // Add more space before the button
               Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF13002E),
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16), // Increase button size
                   ),
                   onPressed: _saveForm,
                   child: Text(
                     'Save',
-                    style: TextStyle(color: Colors.yellow),
+                    style: TextStyle(color: Colors.yellow, fontSize: 16), // Increase font size
                   ),
                 ),
               ),
@@ -201,7 +193,7 @@ class _TaskFormState extends State<TaskForm> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       Task newTask = Task(
-        id: widget.task?.id ?? DateTime.now().millisecondsSinceEpoch,
+        id: widget.task?.id ?? DateTime.now().millisecondsSinceEpoch.remainder(1 << 31),
         title: _title,
         description: _description,
         priority: _priority,

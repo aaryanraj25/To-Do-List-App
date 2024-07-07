@@ -60,6 +60,7 @@ class TaskItem extends StatelessWidget {
                 color: Colors.red, // Set the delete icon color to red
                 onPressed: () {
                   taskController.deleteTask(index);
+                  taskController.clearSearchResults();
                 },
               ),
             ],

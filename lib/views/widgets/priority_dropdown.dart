@@ -13,7 +13,7 @@ class PriorityDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<int>(
       value: initialPriority,
-      decoration: InputDecoration(labelText: 'Priority'),
+      decoration: InputDecoration(labelText: 'Priority', labelStyle: TextStyle(color: Color(0xFF13002E), fontWeight: FontWeight.bold)),
       items: [
         DropdownMenuItem(value: 1, child: Text('Low')),
         DropdownMenuItem(value: 2, child: Text('Medium')),
