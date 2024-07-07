@@ -34,11 +34,11 @@ flutter run
 
 The project follows the MVVM architecture:
 
-lib/controllers: Contains the GetX controllers.
-lib/models: Contains the data models.
-lib/repositories: Contains the repository classes for data handling.
-lib/services: Contains the services like notification handling.
-lib/views: Contains the Flutter UI code.
+- lib/controllers: Contains the GetX controllers.
+- lib/models: Contains the data models.
+- lib/repositories: Contains the repository classes for data handling.
+- lib/services: Contains the services like notification handling.
+- lib/views: Contains the Flutter UI code.
 
 
 
