@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'views/task_list_screen.dart';
+import 'package:todolist/views/task_screen_list.dart';
 import 'controllers/task_controller.dart';
 
 void main() {
