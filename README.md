@@ -1,16 +1,44 @@
-# todolist
+# ToDoList App
 
-A new Flutter project.
+ToDoList is a Flutter-based task management application that allows users to create, manage, and prioritize their tasks. The app follows Material Design guidelines and uses the MVVM architecture with GetX for state management. It also includes notification functionality to remind users of their tasks.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Task Management**: Create, edit, delete, and search tasks.
+- **Task Prioritization**: Set priority levels for tasks.
+- **Reminders**: Schedule notifications to remind users of their tasks.
+- **User-Friendly Interface**: Follows Material Design guidelines for a clean and intuitive UI.
+- **State Management**: Uses GetX for efficient state management.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Prerequisites
+
+- [Flutter](https://flutter.dev/docs/get-started/install) 2.0.0 or higher
+- [Dart](https://dart.dev/get-dart) 2.12.0 or higher
+
+### Clone the Repository
+
+git clone https://github.com/yourusername/todolist.git
+cd todolist 
+
+### Install dependencies
+flutter pub get
+
+### Run the App
+flutter run
+
+
+## Project Structure 
+
+The project follows the MVVM architecture:
+
+lib/controllers: Contains the GetX controllers.
+lib/models: Contains the data models.
+lib/repositories: Contains the repository classes for data handling.
+lib/services: Contains the services like notification handling.
+lib/views: Contains the Flutter UI code.
+
+
+
